@@ -14,18 +14,21 @@ class Player {
         this.position = position
         this.Velocity = Velocity
         this.angle = 0
-        this.Image = new Image()
-        this.Image.src = imagesrc
+        this.Images = new Image()
+        this.Images.src = imagesrc
+        this.Images.style.scale = 5
+        
     }
 
     draw() {
-        c.drawImage(this.Image, this.position.x, this.position.y)
+        c.drawImage(this.Images, this.position.x, this.position.y)
     }
 
     update() {
         this.draw()
         this.position.y += this.Velocity.y
         this.position.x += this.Velocity.x
+        
         
 
         //Screen wrap top-bottom
@@ -77,7 +80,7 @@ const player = new Player({position: {
 Velocity: {
     x: 0,
     y: 0
-}, imagesrc: 'Sprite/Player/basic ship.png'})
+}, imagesrc: 'Sprites/Player/basic ship.png'})
 
 
 player.draw()
