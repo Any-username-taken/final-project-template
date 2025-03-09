@@ -10,15 +10,16 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 // this.var is also like self.var, and it works the same with the arguments
 // draw is like blit, it draws the sprite
 class Player {
-    constructor({position, Velocity}) {
+    constructor({position, Velocity, imagesrc}) {
         this.position = position
         this.Velocity = Velocity
         this.angle = 0
+        this.Image = new Image()
+        this.Image.src = imagesrc
     }
 
     draw() {
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, 50, 50)
+        c.drawImage(this.Image, this.position.x, this.position.y)
     }
 
     update() {
@@ -76,7 +77,7 @@ const player = new Player({position: {
 Velocity: {
     x: 0,
     y: 0
-}})
+}, imagesrc: 'Sprite/Player/basic ship.png'})
 
 
 player.draw()
@@ -172,4 +173,8 @@ window.addEventListener("keyup", (event) => {
     }
 })
 
-window.addEventListener('mousemove', )
+window.addEventListener('mousemove', (event) => {
+    let mouseX = event.clientX
+    let mouseY = event.clientY
+
+})
