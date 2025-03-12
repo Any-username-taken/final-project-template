@@ -21,7 +21,7 @@ class Player {
     }
 
     draw() {
-        c.drawImage(this.Images, this.position.x, this.position.y)
+        c.drawImage(this.Images, this.position.x, this.position.y, 50, 30)
     }
 
     update() {
