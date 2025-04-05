@@ -6,6 +6,18 @@ canvas.height = 576
 
 c.fillRect(0, 0, canvas.width, canvas.height)
 
+
+class Sprite {
+    constructor({position, velocity, imagesrc}) {
+        this.xy = position
+        this.velocity = velocity
+        this.imagesrc = new Image()
+        this.imagesrc = imagesrc
+        this.imagesrc.style.scale = 5
+        this.angle = 0
+    }
+}
+
 // class works similar to python, where constructor is def __init__()
 // this.var is also like self.var, and it works the same with the arguments
 // draw is like blit, it draws the sprite
@@ -16,7 +28,10 @@ class Player {
         this.angle = 0
         this.Images = new Image()
         this.Images.src = imagesrc
+        console.log(this.Images)
+        
         this.Images.style.scale = 5
+        
         
     }
 
