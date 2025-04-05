@@ -1,0 +1,46 @@
+//This is the portion for smooth movement + screen wrap        
+        
+        this.position.y += this.Velocity.y
+        this.position.x += this.Velocity.x
+        
+        
+
+        //Screen wrap top-bottom
+
+        if (this.position.y > 576) {
+            this.position.y = -100
+        }
+
+        if (this.position.y < -100) {
+            this.position.y = 576
+        }
+
+        //Screen wrap left-right
+        
+        if (this.position.x > 1024) {
+            this.position.x = -100
+        }
+
+        if (this.position.x < -100) {
+            this.position.x = 1024
+        }
+
+        //Lower velocity if high
+
+        if (this.Velocity.x > 0) {
+            this.Velocity.x -= 0.125
+        }
+
+        if (this.Velocity.x < 0) {
+            this.Velocity.x += 0.125
+        }
+
+        // for the y velocity now
+
+        if (this.Velocity.y > 0) {
+            this.Velocity.y -= 0.125
+        }
+
+        if (this.Velocity.y < 0) {
+            this.Velocity.y += 0.125
+        }
