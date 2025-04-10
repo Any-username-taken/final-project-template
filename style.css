@@ -1,1 +1,11 @@
- 
+.Game-Title {
+   display: flex;
+   justify-content: center;
+}
+
+.row {
+   display: flex;
+   justify-content: center;
+   justify-content: space-around;
+   flex-direction: row;
+}
