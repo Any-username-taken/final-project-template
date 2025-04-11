@@ -9,14 +9,14 @@ let stars3;
 let stars4;
 let stars5;
 
-
+// 6.3 === full rotation new Component(..., angle)
 // anim var
 let playerSprite = "Sprites/Player/basic ship.png";
 let imagesScale = 0.2;
 
 function startGame() {
     GameArea.start();
-    player = new Component(313*imagesScale, 207*imagesScale, playerSprite,  640-(313*imagesScale)/2, 360-(202*imagesScale)/2, "player", 0)
+    player = new Component(313*imagesScale, 207*imagesScale, playerSprite,  640-(313*imagesScale)/2, 360-(202*imagesScale)/2, "player", 6.3)
 }
 
 //Canvas creation
