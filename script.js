@@ -8,7 +8,7 @@ let stars1;
 // 6.3 === full rotation new Component(..., angle)
 // anim var
 let playerSprite = "Sprites/Player/basic ship.png";
-let imagesScale = 0.2;
+let imagesScale = 0.115;
 
 function startGame() {
     GameArea.start();
@@ -25,9 +25,9 @@ let GameArea = {
         clearInterval(GameArea.interval);
         this.interval = setInterval(updateGameArea, 20);
         this.canvas.id = "Game-Window";
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        let h1Element = document.querySelector("h1.Game-Title");
-        h1Element.insertAdjacentElement("afterend", this.canvas);
+        document.body.insertBefore(this.canvas, document.body.childNodes[1]);
+        let element = document.querySelector("div.window");
+        element.appendChild(this.canvas);
     },
 
     clear: function() {
@@ -70,7 +70,8 @@ function Component (width, height, source, x, y, type, angle) {
             ctx.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
         }
 
-        ctx.restore();
+        ctx.save();
+        ctx.restore()
     }
 }
 
@@ -123,43 +124,72 @@ class Sprite{
 
 
 class Player extends Sprite{
-    constructor(imgPar, pos, type, angle, health, firerate) {
+    constructor(imgPar, pos, type, angle, health, firerate, maxSpeed) {
         super(imgPar, pos, type, angle, health)
 
         this.firerate = firerate
+        this.mSpeed = maxSpeed
+
+        this.mouseX = 0
+        this.mouseY = 0
     }
 
     refresh() {
         this.get_input()
         this.get_keydowns()
+        this.get_angle()
         this.get_translate()
         super.update()
     }
+
+    get_dist() {
+        let element = document.querySelector("canvas");
+        let elementRect = element.getBoundingClientRect();
+        
+        let space_left = elementRect.left;
+        return space_left
+    }
+
+    get_mouse_pos () {
+        document.addEventListener("mousemove", (event) => {
+            let orig = this.get_dist()
+            this.mouseX = event.clientX - orig - 15
+            this.mouseY = event.clientY - 90
+        })
+    }
     
+    get_angle() {
+        this.get_mouse_pos()
+        let dy = this.mouseY - this.pos.y;
+        let dx = this.mouseX - this.pos.x;
+
+        this.angle = Math.atan2(dy, dx);
+    }
+
     get_translate() {
-        this.pos.y += this.velX
-        this.pos.x += this.velY
+        this.pos.y += this.velY
+        this.pos.x += this.velX
         
         
 
         //Screen wrap top-bottom
 
-        if (this.pos.y > 576) {
+        if (this.pos.y > 720) {
             this.pos.y = -100
         }
 
         if (this.pos.y < -100) {
-            this.pos.y = 576
+            this.pos.y = 720
         }
 
         //Screen wrap left-right
         
-        if (this.pos.x > 1024) {
+        if (this.pos.x > 1280) {
             this.pos.x = -100
         }
 
         if (this.pos.x < -100) {
-            this.position.x = 1024
+            this.pos.x = 1280
         }
 
         //Lower velocity if high
@@ -185,15 +215,33 @@ class Player extends Sprite{
 
     get_keydowns() {
         if (this.keypress.w) {
-            this.velY -= 0.5
+            if (this.velY < 0 - this.mSpeed){
+
+                this.velY = 0 - this.mSpeed
+            } else {
+                this.velY -= 0.5
+            }
         } else if (this.keypress.s) {
+            if (this.velY > this.mSpeed) {
+                this.velY = this.mSpeed
+            } else {
             this.velY += 0.5
+            }
         }
 
         if (this.keypress.a) {
-            this.velX -= 0.5
+            if (this.velX < 0 - this.mSpeed){
+
+                this.velX = 0 - this.mSpeed
+            } else {
+                this.velX -= 0.5
+            }
         } else if (this.keypress.d) {
+            if (this.velX > this.mSpeed) {
+                this.velX = this.mSpeed
+            } else {
             this.velX += 0.5
+            }
         }
     }
 
@@ -242,11 +290,12 @@ let layer = new Player({
     height: 207*imagesScale, 
     source: playerSprite
     }, //imgParamaters
-    [0, 0],//pos
+    {x: 0, y: 0},//pos
     "idk", //type? idk why I added that
-    0, //angle
+    1.5, //angle
     20, //health
-    1.5 //firerate
+    1.5, //firerate
+    10 //speed
 )
 
 
