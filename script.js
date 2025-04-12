@@ -4,6 +4,7 @@
 let player;
 let b_ground;
 let stars1;
+let projectiles = []
 
 // 6.3 === full rotation new Component(..., angle)
 // anim var
@@ -35,46 +36,7 @@ let GameArea = {
     }
 }
 
-function Component (width, height, source, x, y, type, angle) {
-    this.type = type;
-    this.angle = angle;
-
-    if(type === "image" || type === "stars") {
-        this.image = new Image();
-        this.image.src = source;
-    } else if (type === "player") {
-        this.image = new Image();
-        this.image.src = playerSprite;
-    }
-
-    this.width = width;
-    this.height = height;
-
-    this.x = x;
-    this.y = y;
-
-    this.update = function() {
-        let ctx = GameArea.context;
-
-        ctx.save();
-
-        //rotate player img
-        ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.rotate(this.angle);
-
-        //Images anim
-        if (type === "image" || type === "stars") {
-            ctx.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
-        } else if (type === "player") {
-            this.image.src = playerSprite;
-            ctx.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
-        }
-
-        ctx.save();
-        ctx.restore()
-    }
-}
-
+//Sprite class
 
 class Sprite{
     constructor(imgPar, pos, type, angle, health) {
@@ -122,12 +84,14 @@ class Sprite{
     }
 }
 
+//Player class parent is Sprite
 
 class Player extends Sprite{
     constructor(imgPar, pos, type, angle, health, firerate, maxSpeed) {
         super(imgPar, pos, type, angle, health)
 
         this.firerate = firerate
+        this.cooldown = 0
         this.mSpeed = maxSpeed
 
         this.mouseX = 0
@@ -282,6 +246,43 @@ class Player extends Sprite{
             }
         })
     }
+
+    shoot() {
+        document.addEventListener("mousedown", (event) => {
+            if (event.button === 0 && this.cooldown < 0.5) {
+                
+            }
+        })
+    }
+}
+
+
+class Bullet extends Sprite{
+    constructor(imgPar, pos, type, angle, dmg, speed, lifetime) {
+        super(imgPar, pos, type, angle) //type is targeter of bullet
+
+        this.dmg = dmg //amount dmg
+        this.speed = speed // speed of projectile
+        this.life = lifetime
+
+        this.velocityX = Math.cos(this.angle) * this.speed;
+        this.velocityY = Math.sin(this.angle) * this.speed;
+    }
+
+    refresh() {
+        this.take_life()
+        this.update()
+    }
+
+    take_life() {
+        this.life -= 0.1
+    }
+
+    move() {
+        this.pos.x += this.velocityX
+        this.pos.y += this.velocityY
+    }
+    
 }
 
 
@@ -298,6 +299,46 @@ let layer = new Player({
     10 //speed
 )
 
+function createBullet(Xp, Yp, type, angle, dmg, speed, lifetime) {
+    if (type === "P") {
+        let bul_src = "Sprites/Bullets/costume1.png"
+    } else{
+        let bul_src = null // change to enemy version
+    }
+
+    let newBullet = new Bullet({
+        width: 313*imagesScale,
+        height: 207*imagesScale,
+        source: bul_src
+    },
+    {x: Xp, y: Yp},
+    type,
+    angle,
+    dmg,
+    speed,
+    lifetime
+    )
+
+    projectiles.push(newBullet)
+}
+
+
+function updateProjectiles(context) {
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+        let projectile = projectiles[i];
+        projectile.refresh();
+
+        // Remove if off-screen
+        if (projectile.x < -100 || projectile.x > context.canvas.width || projectile.y < -100 || projectile.y > context.canvas.height) {
+            projectiles.splice(i, 1);
+        }
+
+        if (projectile.life < 0.1) {
+            projectiles.splice(i, 1);
+        }
+    }
+}
+
 
 function updateGameArea() {
     GameArea.clear();
@@ -305,4 +346,5 @@ function updateGameArea() {
     let ctx = GameArea.context;
 
     layer.refresh()
+    updateProjectiles(ctx)
 }
