@@ -12,11 +12,6 @@ let imagesScale = 0.2;
 
 function startGame() {
     GameArea.start();
-    player = new Component(313*imagesScale, 207*imagesScale, playerSprite,  640-(313*imagesScale)/2, 360-(202*imagesScale)/2, "player", 6.3)
-
-    //Get Input
-    window.addEventListener("keydown", handleMovementPress);
-    window.addEventListener("keyup", handleMovementRelease);
 }
 
 //Canvas creation
@@ -136,6 +131,7 @@ class Player extends Sprite{
 
     refresh() {
         this.get_input()
+        this.get_keydowns()
         this.get_translate()
         super.update()
     }
@@ -188,7 +184,17 @@ class Player extends Sprite{
     }
 
     get_keydowns() {
+        if (this.keypress.w) {
+            this.velY -= 0.5
+        } else if (this.keypress.s) {
+            this.velY += 0.5
+        }
 
+        if (this.keypress.a) {
+            this.velX -= 0.5
+        } else if (this.keypress.d) {
+            this.velX += 0.5
+        }
     }
 
     get_input() {
@@ -230,11 +236,24 @@ class Player extends Sprite{
     }
 }
 
+
+let layer = new Player({
+    width: 313*imagesScale, 
+    height: 207*imagesScale, 
+    source: playerSprite
+    }, //imgParamaters
+    [0, 0],//pos
+    "idk", //type? idk why I added that
+    0, //angle
+    20, //health
+    1.5 //firerate
+)
+
+
 function updateGameArea() {
     GameArea.clear();
 
     let ctx = GameArea.context;
 
-    enemy.update()
-
+    layer.refresh()
 }
